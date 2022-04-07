@@ -1,6 +1,17 @@
 const jwt = require("jsonwebtoken");
 
 module.exports = {
+	mustBeAdmin(req, res, next) {
+		const role = req.user?.role;
+
+		if (!role || role !== "admin") {
+			res.status(403).json({ message: "Admin role required" });
+			return;
+		}
+
+		next();
+	},
+
 	mustLogin(req, res, next) {
 		const token = req.get("Authorization")?.split(' ')[1];
 

@@ -13,8 +13,9 @@ app.get('/', (_req, res) => {
 	res.send("Welcome to Nikshop API");
 });
 
-app.use('/users', require("./routes/user"));
+app.use('/user', require("./routes/user"));
 app.use('/', require('./routes/entry'));
+app.use('/produk', require('./routes/produk'));
 
 app.use((err, _req, res, _next) => {
 	res.status(500).json({"message": "Internal server error"});
