@@ -3,6 +3,7 @@ const router = require('express').Router();
 const { mustLogin, mustBeAdmin } = require('../middlewares/must');
 
 const { User } = require('../models');
+const {filterProperties} = require('../utilities');
 
 router.delete('/:id', mustLogin, (req, res, next) => {
   if (req.params.id !== req.user.id && req.user.role !== "admin") {
@@ -41,8 +42,10 @@ router.get('/:id', mustLogin, mustBeAdmin, (req, res, next) => {
     .catch((error) => { next(error) });
 });
 
-router.get('/', mustLogin, mustBeAdmin, (_req, res, next) => {
-  User.findAll({ attributes: { exclude: ["password"] } })
+router.get('/', mustLogin, mustBeAdmin, (req, res, next) => {
+  const query = filterProperties(req.query, ["username", "email", "role"]);
+
+  User.findAll({ where: query, attributes: { exclude: ["password"] } })
     .then((users) => {
       res.json({ result: users });
     })

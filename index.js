@@ -16,6 +16,7 @@ app.get('/', (_req, res) => {
 app.use('/user', require("./routes/user"));
 app.use('/', require('./routes/entry'));
 app.use('/produk', require('./routes/produk'));
+app.use('/paket', require('./routes/paket'));
 
 app.use((err, _req, res, _next) => {
 	res.status(500).json({"message": "Internal server error"});
