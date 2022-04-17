@@ -2,6 +2,10 @@
 const {
   Model
 } = require('sequelize');
+
+const fs = require('fs');
+const path = require('path');
+
 module.exports = (sequelize, DataTypes) => {
   class Produk extends Model {
     /**
@@ -38,6 +42,17 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Produk',
     underscored: true,
+    hooks: {
+      afterDestroy: (produk, _options) => {
+        let imagePath = path.join(__dirname, "../public", produk.img_path);
+        console.log(imagePath);
+        fs.unlink(imagePath, err => console.error(err));
+      },
+      afterUpdate: (produk, _options) => {
+        let imagePath = path.join(__dirname, "../public", produk.previous("img_path"));
+        fs.unlink(imagePath, err => console.error(err));
+      }
+    }
   });
   return Produk;
 };

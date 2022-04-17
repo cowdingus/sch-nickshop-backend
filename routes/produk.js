@@ -26,7 +26,7 @@ router.get("/", (req, res, next) => {
     where: query
   }).then((result) => {
       res.json({ result });
-  }).catch((error) => { next(error) });
+  }).catch(err => next(err));
 });
 
 router.get("/:id", (req, res, next) => {
@@ -34,7 +34,7 @@ router.get("/:id", (req, res, next) => {
     .then((result) => {
       res.json({ result });
     })
-    .catch((error) => { next(error) });
+    .catch(err => next(err));
 });
 
 router.post("/", mustLogin, mustBeAdmin, upload.single("image"), deepFileTypeCheck, (req, res, next) => {
@@ -49,7 +49,7 @@ router.post("/", mustLogin, mustBeAdmin, upload.single("image"), deepFileTypeChe
     fields: ["nama", "deskripsi", "img_path"]
   }).then((result) => {
     res.json({ result });
-  }).catch((error) => { next(error) });
+  }).catch(err => next(err));
 });
 
 router.put("/:id", mustLogin, mustBeAdmin, upload.single("image"), deepFileTypeCheck, (req, res, next) => {
@@ -57,23 +57,39 @@ router.put("/:id", mustLogin, mustBeAdmin, upload.single("image"), deepFileTypeC
     res.status(400).json({message: "`image` field is empty"});
   }
 
-  Produk.update({
-    ...req.body,
-    img_path: path.join(imageUploadDirectory, req.file.filename)
-  }, {
-    where: { id: req.params.id },
-    fields: ["nama", "deskripsi", "img_path"]
-  }).then((result) => {
-    res.json({ result });
-  }).catch((error) => { next(error); });
+  Produk.findByPk(req.params.id)
+    .then((produk) => {
+      if (!produk) {
+        res.status(400).json({ message: "No such product exists" });
+        return;
+      }
+
+      produk.update({
+        ...req.body,
+        img_path: path.join(imageUploadDirectory, req.file.filename)
+      }, {
+        where: { id: req.params.id },
+        fields: ["nama", "deskripsi", "img_path"]
+      }).then((result) => {
+        res.json({ result });
+      }).catch(err => next(err));
+    }).catch(err => next(err));
 });
 
 router.delete("/:id", mustLogin, mustBeAdmin, (req, res, next) => {
-  Produk.destroy({
-    where: { id: req.params.id }
-  }).then((result) => {
-    res.json({ result });
-  }).catch((error) => { next(error) });
+  Produk.findByPk(req.params.id)
+    .then((produk) => {
+      if (!produk) {
+        res.status(400).json({ message: "No such product exists" });
+        return;
+      }
+
+      produk.destroy()
+        .then((result) => {
+          res.json({ result });
+        })
+        .catch(err => next(err));
+    }).catch(err => next(err));
 });
 
 module.exports = router;
