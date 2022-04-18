@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Paket.belongsTo(models.Produk, {
         foreignKey: 'id_produk',
-        as: 'paket_paket'
+        as: 'produk'
       });
 
       Paket.hasMany(models.Transaksi, {

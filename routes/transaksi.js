@@ -1,14 +1,13 @@
 const router = require('express').Router();
 
 const { mustLogin, mustBeAdmin } = require('../middlewares/must');
-const { Transaksi, User, Produk, Paket } = require("../models");
+const { Transaksi, User, Paket } = require("../models");
 
 router.get("/", mustLogin, mustBeAdmin, (req, res, next) => {
   Transaksi.findAll({
     include: [
       { model: User, attributes: { exclude: ["password"] } },
-      { model: Produk },
-      { model: Paket }
+      { model: Paket, include: [ "produk" ] }
     ]
   }).then((result) => {
     res.json({ result });
@@ -17,7 +16,7 @@ router.get("/", mustLogin, mustBeAdmin, (req, res, next) => {
 
 router.post("/", mustLogin, mustBeAdmin, (req, res, next) => {
   Transaksi.create(req.body, {
-    fields: ["id_user", "id_paket", "id_produk"]
+    fields: ["id_user", "id_paket"]
   }).then((result) => {
     res.json({ result });
   }).catch((error) => { next(error) });
@@ -26,7 +25,7 @@ router.post("/", mustLogin, mustBeAdmin, (req, res, next) => {
 router.put("/:id", mustLogin, mustBeAdmin, (req, res, next) => {
   Transaksi.update(req.body, {
     where: { id: req.params.id },
-    fields: ["id_user", "id_paket", "id_produk"]
+    fields: ["id_user", "id_paket"]
   }).then((result) => {
     res.json({ result });
   }).catch((error) => { next(error) });

@@ -15,20 +15,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'id_user',
       });
 
-      Transaksi.belongsTo(models.Produk, {
-        foreignKey: 'id_produk',
-      });
-
       Transaksi.belongsTo(models.Paket, {
         foreignKey: 'id_paket',
       });
     }
   }
   Transaksi.init({
-    id_produk: {
-      allowNull: false,
-      type: DataTypes.INTEGER
-    },
     id_user: {
       allowNull: false,
       type: DataTypes.INTEGER

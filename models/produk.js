@@ -19,10 +19,6 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'id_produk',
         as: 'paket_paket'
       });
-
-      Produk.hasMany(models.Transaksi, {
-        foreignKey: 'id_produk'
-      });
     }
   }
   Produk.init({

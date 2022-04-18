@@ -8,17 +8,21 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      id_produk: {
-        allowNull: false,
-        type: Sequelize.INTEGER
-      },
       id_user: {
         allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: "User",
+          key: "id"
+        }
       },
       id_paket: {
         allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Paket",
+          key: "id"
+        }
       },
       created_at: {
         allowNull: false,
