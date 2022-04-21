@@ -34,7 +34,12 @@ router.put('/:id', mustLogin, (req, res, next) => {
   }).catch((error) => { next(error) });
 });
 
-router.get('/:id', mustLogin, mustBeAdmin, (req, res, next) => {
+router.get('/:id', mustLogin, (req, res, next) => {
+  if (req.params.id !== req.user.id && req.user.role !== "admin") {
+    res.status(403).json({message: "If not fetching your own account, admin role required"});
+    return;
+  }
+
   User.findByPk(req.params.id, { attributes: { exclude: ["password"] } })
     .then((user) => {
       res.json({ result: user });
@@ -50,6 +55,25 @@ router.get('/', mustLogin, mustBeAdmin, (req, res, next) => {
       res.json({ result: users });
     })
     .catch((error) => { next(error) });
+});
+
+router.post('/topup', mustLogin, (req, res, next) => {
+  if (!req.body.jumlah) {
+    res.status(400).json({ message: "`jumlah` field isn't defined" });
+  }
+
+  User.findByPk(req.user.id)
+    .then((user) => {
+      if (!user) {
+        res.status(400).json({ message: "Logged-in user doesn't exist" });
+      }
+
+      user.update({
+        saldo: user.saldo + parseInt(req.body.jumlah)
+      }).then((result) => {
+        res.json({ result });
+      }).catch(err => next(err));
+    }).catch(err => next(err));
 });
 
 module.exports = router;

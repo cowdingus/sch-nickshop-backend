@@ -28,6 +28,11 @@ module.exports = {
         values: ['admin', 'member'],
         defaultValue: 'member'
       },
+      saldo: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

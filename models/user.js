@@ -45,6 +45,11 @@ module.exports = (sequelize, DataTypes) => {
       values: ['admin', 'member'],
       defaultValue: 'member'
     },
+    saldo: {
+      allowNull: false,
+      type: DataTypes.INTEGER,
+      defaultValue: 0
+    }
   }, {
     sequelize,
     modelName: 'User',
