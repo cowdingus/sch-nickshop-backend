@@ -71,7 +71,7 @@ router.post('/topup', mustLogin, (req, res, next) => {
       user.update({
         saldo: user.saldo + parseInt(req.body.jumlah)
       }).then((result) => {
-        res.json({ result });
+        res.json({ status: 1, message: "Berhasil Topup" });
       }).catch(err => next(err));
     }).catch(err => next(err));
 });

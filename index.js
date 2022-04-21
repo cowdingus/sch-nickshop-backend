@@ -18,6 +18,7 @@ app.use('/user', require("./routes/user"));
 app.use('/produk', require('./routes/produk'));
 app.use('/paket', require('./routes/paket'));
 app.use('/transaksi', require('./routes/transaksi'));
+app.use('/purchase', require('./routes/purchase'));
 
 app.use((err, _req, res, _next) => {
 	res.status(500).json({"message": "Internal server error"});

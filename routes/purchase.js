@@ -3,7 +3,7 @@ const router = require('express').Router();
 const { mustLogin } = require('../middlewares/must');
 const { Transaksi, User, Paket } = require("../models");
 
-router.post("/purchase/:item_id", mustLogin, (req, res, next) => {
+router.post("/:item_id", mustLogin, (req, res, next) => {
   User.findByPk(req.user.id)
     .then((user) => {
       if (!user) {
@@ -23,6 +23,8 @@ router.post("/purchase/:item_id", mustLogin, (req, res, next) => {
           }).then((_result) => {
             user.update({
               saldo: user.saldo - paket.harga
+            }).then((result) => {
+              res.json({ status: 1, message: "Pembelian berhasil!", sisa_saldo: result.saldo })
             }).catch(err => next(err));
           }).catch(err => next(err));
         }).catch(err => next(err));
